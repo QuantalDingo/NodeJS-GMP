@@ -1,4 +1,4 @@
-export interface AutoSuggest {
+export interface IAutoSuggest {
 	loginSubstring: string;
 	limit: number;
 }

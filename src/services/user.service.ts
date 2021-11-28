@@ -1,17 +1,19 @@
 import { randomUUID } from 'crypto';
 
-import { BaseUser, User } from '../models/user';
+import { IBaseUser, IUser } from '../models/user';
 import { users } from '../data/data';
 
 export const getUserById = (id: string) => users.find((item) => item.id === id);
 
-export const saveUser = (user: User) => {
+export const saveUser = (baseUser: IBaseUser) => {
+	const user = createUser(baseUser);
+
 	users.push(user);
 
 	return user;
 };
 
-export const createUser = (user: BaseUser): User => ({
+export const createUser = (user: IBaseUser): IUser => ({
 	id: randomUUID(),
 	isDeleted: false,
 	...user,
@@ -20,8 +22,8 @@ export const createUser = (user: BaseUser): User => ({
 export const getAutoSuggestUsers = (
 	loginSubstring: string,
 	limit: number
-): User[] => {
-	const sortedUsers = users.sort((a, b) =>
+): IUser[] => {
+	const sortedUsers = [...users].sort((a, b) =>
 		a['login'].localeCompare(b['login'])
 	);
 	const suggestion = sortedUsers.filter((user) =>
@@ -33,8 +35,12 @@ export const getAutoSuggestUsers = (
 	return suggestion.slice(0, limit);
 };
 
-export const updateUser = (id: string, value: BaseUser) => {
+export const updateUser = (id: string, value: IBaseUser) => {
 	const userIndex = users.findIndex((user) => user.id === id);
+
+	if (userIndex === -1) {
+		return undefined;
+	}
 
 	users[userIndex] = {
 		id: users[userIndex].id,

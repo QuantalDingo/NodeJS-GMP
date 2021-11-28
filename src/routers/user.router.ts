@@ -1,34 +1,40 @@
 import { Request, Response, Router } from 'express';
 import { createValidator, ValidatedRequest } from 'express-joi-validation';
 
-import { AutoSuggest } from '../models/auto-suggest';
-import { BaseUser, User } from '../models/user';
+import { IBaseUser, IUser } from '../models/user';
 import {
 	saveUser,
 	deleteUser,
 	updateUser,
-	createUser,
 	getUserById,
 	getAutoSuggestUsers,
-} from '../controllers/user.controller';
-import { schema, UserRequestSchema } from '../validators/user.validator';
+} from '../services/user.service';
+import {
+	userSchema,
+	IUserRequestSchema,
+	IQuerySchema,
+	autoSuggestSchema,
+} from '../validators';
 
 const router = Router();
 const validator = createValidator();
 
 router.get(
 	'/:id',
-	(req: Request<{ id: string }, User, BaseUser>, res: Response<User>) => {
+	(req: Request<{ id: string }, IUser, IBaseUser>, res: Response<IUser>) => {
 		const id = req.params.id;
 		const user = getUserById(id);
 
-		res.json(user);
+		user && res.json(user);
+
+		res.status(404).send();
 	}
 );
 
 router.get(
 	'/',
-	(req: Request<{}, User[], {}, AutoSuggest>, res: Response<User[]>) => {
+	validator.query(autoSuggestSchema),
+	(req: ValidatedRequest<IQuerySchema>, res: Response<IUser[]>) => {
 		const { loginSubstring, limit } = req.query;
 
 		res.json(getAutoSuggestUsers(loginSubstring, limit));
@@ -37,18 +43,18 @@ router.get(
 
 router.delete('/:id', (req, res) => {
 	const id = req.params.id;
-	deleteUser(id);
+	deleteUser(id) && res.status(200).send();
 
-	res.status(200).send();
+	res.status(404).send();
 });
 
 router.post(
 	'/',
-	validator.query(schema),
-	(req: ValidatedRequest<UserRequestSchema>, res: Response<User>) => {
+	validator.body(userSchema),
+	(req: ValidatedRequest<IUserRequestSchema>, res: Response<IUser>) => {
 		const body = req.body;
 
-		const user = saveUser(createUser(body));
+		const user = saveUser(body);
 
 		res.json(user);
 	}
@@ -56,14 +62,16 @@ router.post(
 
 router.put(
 	'/:id',
-	validator.body(schema),
-	(req: ValidatedRequest<UserRequestSchema>, res: Response<User>) => {
+	validator.body(userSchema),
+	(req: ValidatedRequest<IUserRequestSchema>, res: Response<IUser>) => {
 		const id = req.params.id;
 		const body = req.body;
 
 		const user = updateUser(id, body);
 
-		res.json(user);
+		user && res.json(user);
+
+		res.status(404).send();
 	}
 );
 

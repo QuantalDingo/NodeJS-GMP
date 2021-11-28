@@ -7,6 +7,6 @@ const app = express();
 
 app.use(json());
 
-app.use('/user', router);
+app.use('/users', router);
 
 app.listen(PORT, () => console.log(`☢︎ Running server on port ${PORT}`));
