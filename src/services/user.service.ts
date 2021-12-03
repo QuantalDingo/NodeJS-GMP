@@ -1,63 +1,42 @@
 import { randomUUID } from 'crypto';
+import { inject, injectable } from 'inversify';
+import { User } from '.prisma/client';
 
-import { IBaseUser, IUser } from '../models/user';
-import { users } from '../data/data';
+import { IBaseUser } from '@models/user';
+import { TOKENS } from '../constants';
+import { Repository } from '@models/repository';
 
-export const getUserById = (id: string) => users.find((item) => item.id === id);
+@injectable()
+export class UserService {
+	constructor(
+		@inject(TOKENS.Repository) private readonly repo: Repository<User>
+	) {}
 
-export const saveUser = (baseUser: IBaseUser) => {
-	const user = createUser(baseUser);
-
-	users.push(user);
-
-	return user;
-};
-
-export const createUser = (user: IBaseUser): IUser => ({
-	id: randomUUID(),
-	isDeleted: false,
-	...user,
-});
-
-export const getAutoSuggestUsers = (
-	loginSubstring: string,
-	limit: number
-): IUser[] => {
-	const sortedUsers = [...users].sort((a, b) =>
-		a['login'].localeCompare(b['login'])
-	);
-	const suggestion = sortedUsers.filter((user) =>
-		user.login
-			.toLocaleLowerCase()
-			.includes(loginSubstring.trim().toLocaleLowerCase())
-	);
-
-	return suggestion.slice(0, limit);
-};
-
-export const updateUser = (id: string, value: IBaseUser) => {
-	const userIndex = users.findIndex((user) => user.id === id);
-
-	if (userIndex === -1) {
-		return undefined;
+	async getUsers(loginSubstring: string, limit: number) {
+		return await this.repo.findAll('login', loginSubstring, limit);
 	}
 
-	users[userIndex] = {
-		id: users[userIndex].id,
-		isDeleted: users[userIndex].isDeleted,
-		...value,
-	};
-
-	return users[userIndex];
-};
-
-export const deleteUser = (id: string) => {
-	const userIndex = users.findIndex((user) => user.id === id);
-
-	if (userIndex === -1) {
-		return false;
+	async getUserById(id: string) {
+		return await this.repo.find(id);
 	}
 
-	users[userIndex].isDeleted = true;
-	return true;
-};
+	async saveUser(user: IBaseUser) {
+		return await this.repo.create(this.createUser(user));
+	}
+
+	async deleteUser(id: string) {
+		return await this.repo.delete(id);
+	}
+
+	async updateUser(id: string, data: IBaseUser) {
+		return await this.repo.update(id, data);
+	}
+
+	private createUser(user: IBaseUser) {
+		return {
+			id: randomUUID(),
+			isDeleted: false,
+			...user,
+		};
+	}
+}

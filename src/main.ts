@@ -1,12 +1,18 @@
-import express, { json } from 'express';
+import 'reflect-metadata';
 
-import router from './routers/user.router';
+import { json } from 'express';
+import { InversifyExpressServer } from 'inversify-express-utils';
+
+import container from './utils/di';
+
+import './controllers/user.controller';
 
 const PORT = process.env.PORT || 3000;
-const app = express();
 
-app.use(json());
-
-app.use('/users', router);
-
-app.listen(PORT, () => console.log(`☢︎ Running server on port ${PORT}`));
+const server = new InversifyExpressServer(container);
+server
+	.setConfig((app) => {
+		app.use(json());
+	})
+	.build()
+	.listen(PORT, () => console.log(`☢︎ Running server on port ${PORT}`));
