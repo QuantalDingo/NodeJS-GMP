@@ -7,7 +7,9 @@ export const userSchema = Joi.object({
 	password: Joi.string()
 		.alphanum()
 		.required()
-		.regex(new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)),
+		.regex(
+			new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/)
+		),
 });
 
 export interface IUserRequestSchema extends ValidatedRequestSchema {

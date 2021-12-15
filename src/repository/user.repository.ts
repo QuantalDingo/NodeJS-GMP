@@ -11,7 +11,7 @@ export default class UserRepository implements Repository<User> {
 	) {}
 
 	async create(user: User): Promise<User> {
-		return await this.repo.user.create({
+		return this.repo.user.create({
 			data: {
 				...user,
 			},
@@ -19,7 +19,7 @@ export default class UserRepository implements Repository<User> {
 	}
 
 	async delete(id: string): Promise<User> {
-		return await this.repo.user.delete({ where: { id: id } });
+		return this.repo.user.delete({ where: { id: id } });
 	}
 
 	async findAll(
@@ -27,7 +27,7 @@ export default class UserRepository implements Repository<User> {
 		value: User[keyof User],
 		take?: number
 	): Promise<User[]> {
-		return await this.repo.user.findMany({
+		return this.repo.user.findMany({
 			where: { [key]: { contains: value } },
 			orderBy: { [key]: 'asc' },
 			take,
@@ -35,7 +35,7 @@ export default class UserRepository implements Repository<User> {
 	}
 
 	async find(id: string): Promise<User | null> {
-		return await this.repo.user.findUnique({
+		return this.repo.user.findUnique({
 			where: {
 				id,
 			},
@@ -43,7 +43,7 @@ export default class UserRepository implements Repository<User> {
 	}
 
 	async update(id: string, updatedUser: Partial<User>): Promise<User> {
-		return await this.repo.user.update({
+		return this.repo.user.update({
 			where: { id },
 			data: { ...updatedUser },
 		});

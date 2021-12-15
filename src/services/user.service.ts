@@ -13,23 +13,23 @@ export class UserService {
 	) {}
 
 	async getUsers(loginSubstring: string, limit: number) {
-		return await this.repo.findAll('login', loginSubstring, limit);
+		return this.repo.findAll('login', loginSubstring, limit);
 	}
 
 	async getUserById(id: string) {
-		return await this.repo.find(id);
+		return this.repo.find(id);
 	}
 
 	async saveUser(user: IBaseUser) {
-		return await this.repo.create(this.createUser(user));
+		return this.repo.create(this.createUser(user));
 	}
 
 	async deleteUser(id: string) {
-		return await this.repo.delete(id);
+		return this.repo.delete(id);
 	}
 
 	async updateUser(id: string, data: IBaseUser) {
-		return await this.repo.update(id, data);
+		return this.repo.update(id, data);
 	}
 
 	private createUser(user: IBaseUser) {

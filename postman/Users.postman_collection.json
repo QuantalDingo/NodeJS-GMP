@@ -12,14 +12,9 @@
 				"header": [],
 				"url": {
 					"raw": "localhost:3000/users/0",
-					"host": [
-						"localhost"
-					],
+					"host": ["localhost"],
 					"port": "3000",
-					"path": [
-						"users",
-						"0"
-					]
+					"path": ["users", "0"]
 				}
 			},
 			"response": []
@@ -31,13 +26,9 @@
 				"header": [],
 				"url": {
 					"raw": "localhost:3000/users?loginSubstring=&limit=10",
-					"host": [
-						"localhost"
-					],
+					"host": ["localhost"],
 					"port": "3000",
-					"path": [
-						"users"
-					],
+					"path": ["users"],
 					"query": [
 						{
 							"key": "loginSubstring",
@@ -59,14 +50,9 @@
 				"header": [],
 				"url": {
 					"raw": "localhost:3000/users/1",
-					"host": [
-						"localhost"
-					],
+					"host": ["localhost"],
 					"port": "3000",
-					"path": [
-						"users",
-						"1"
-					]
+					"path": ["users", "1"]
 				}
 			},
 			"response": []
@@ -87,13 +73,9 @@
 				},
 				"url": {
 					"raw": "localhost:3000/users",
-					"host": [
-						"localhost"
-					],
+					"host": ["localhost"],
 					"port": "3000",
-					"path": [
-						"users"
-					]
+					"path": ["users"]
 				}
 			},
 			"response": []
@@ -114,14 +96,9 @@
 				},
 				"url": {
 					"raw": "localhost:3000/users/1",
-					"host": [
-						"localhost"
-					],
+					"host": ["localhost"],
 					"port": "3000",
-					"path": [
-						"users",
-						"1"
-					]
+					"path": ["users", "1"]
 				}
 			},
 			"response": []
