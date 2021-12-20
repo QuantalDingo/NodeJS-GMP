@@ -1,0 +1,25 @@
+{
+	"users": [
+		{
+			"id": "0",
+			"login": "RicardoMilos42",
+			"password": "Password123!",
+			"age": 42,
+			"isDeleted": false
+		},
+		{
+			"id": "1",
+			"login": "Elvira666",
+			"password": "Dev1lInside&",
+			"age": 39,
+			"isDeleted": false
+		},
+		{
+			"id": "2",
+			"login": "JoeBayDEAN",
+			"password": "USA4ever#",
+			"age": 78,
+			"isDeleted": false
+		}
+	]
+}
