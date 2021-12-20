@@ -3,10 +3,16 @@ import { ContainerModule, Container } from 'inversify';
 
 import { TOKENS } from '../constants/tokens';
 import { UserService } from '../services/user.service';
-import UserRepository from '../repository/user.repository';
+import { GroupRepository, UserRepository } from '../repository';
 
 const serviceModule = new ContainerModule((bind) => {
-	bind<UserRepository>(TOKENS.Repository).to(UserRepository);
+	bind<UserRepository>(TOKENS.Repository)
+		.to(UserRepository)
+		.whenTargetNamed('user');
+	bind<GroupRepository>(TOKENS.Repository)
+		.to(GroupRepository)
+		.whenTargetNamed('group');
+
 	bind<UserService>(TOKENS.UserService).to(UserService);
 });
 

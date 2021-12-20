@@ -1,5 +1,5 @@
 export interface Repository<T> {
-	create(item: T): Promise<T>;
+	create(item: Partial<T>): Promise<T>;
 	delete(id: string): Promise<T>;
 	findAll<K extends keyof T>(
 		key: K,

@@ -5,7 +5,7 @@ import { TOKENS } from '../constants';
 import { Repository } from '@models/repository';
 
 @injectable()
-export default class UserRepository implements Repository<User> {
+export class UserRepository implements Repository<User> {
 	constructor(
 		@inject(TOKENS.PrismaClient) private readonly repo: PrismaClient
 	) {}
@@ -19,12 +19,12 @@ export default class UserRepository implements Repository<User> {
 	}
 
 	async delete(id: string): Promise<User> {
-		return this.repo.user.delete({ where: { id: id } });
+		return this.repo.user.delete({ where: { id } });
 	}
 
-	async findAll(
-		key: keyof User,
-		value: User[keyof User],
+	async findAll<K extends keyof User>(
+		key: K,
+		value: User[K],
 		take?: number
 	): Promise<User[]> {
 		return this.repo.user.findMany({
@@ -46,6 +46,19 @@ export default class UserRepository implements Repository<User> {
 		return this.repo.user.update({
 			where: { id },
 			data: { ...updatedUser },
+		});
+	}
+
+	async isUserInGroup(groupId: string, userId: string): Promise<boolean> {
+		return !!this.repo.user.findFirst({
+			where: {
+				id: userId,
+				UserGroup: {
+					some: {
+						group_id: groupId,
+					},
+				},
+			},
 		});
 	}
 }

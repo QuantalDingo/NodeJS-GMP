@@ -8,11 +8,29 @@ datasource db {
 }
 
 model User {
-  id        String  @id @db.VarChar(255)
-  login     String  @unique @db.VarChar(255)
-  password  String  @db.VarChar(255)
+  id        String      @id @db.VarChar(255)
+  login     String      @unique @db.VarChar(255)
+  password  String      @db.VarChar(255)
   age       Int
-  isDeleted Boolean @default(false)
+  isDeleted Boolean     @default(false)
+  UserGroup UserGroup[] @relation("UserGroupToUsers")
 
   @@map("Users")
+}
+
+model Group {
+  id          String      @id @default(dbgenerated("nextval('\"Groups_id_seq\"'::regclass)")) @db.VarChar(255)
+  name        String      @unique
+  permissions String[]
+  UserGroup   UserGroup[] @relation("GroupsToUserGroup")
+
+  @@map("Groups")
+}
+
+model UserGroup {
+  id       Int    @id @default(autoincrement())
+  group_id String @db.VarChar(255)
+  user_id  String @db.VarChar(255)
+  Groups   Group  @relation("GroupsToUserGroup", fields: [group_id], references: [id], onDelete: Cascade)
+  Users    User   @relation("UserGroupToUsers", fields: [user_id], references: [id], onDelete: Cascade)
 }

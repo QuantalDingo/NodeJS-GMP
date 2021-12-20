@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { inject, injectable } from 'inversify';
+import { inject, injectable, named } from 'inversify';
 import { User } from '.prisma/client';
 
 import { IBaseUser } from '@models/user';
@@ -9,7 +9,9 @@ import { Repository } from '@models/repository';
 @injectable()
 export class UserService {
 	constructor(
-		@inject(TOKENS.Repository) private readonly repo: Repository<User>
+		@inject(TOKENS.Repository)
+		@named('user')
+		private readonly repo: Repository<User>
 	) {}
 
 	async getUsers(loginSubstring: string, limit: number) {
